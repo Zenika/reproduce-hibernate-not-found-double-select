@@ -19,21 +19,18 @@ class DemoApplicationTests {
 	QueryCountInterceptor queryCountInterceptor;
 
 	@Test
-	void testSaveClientWithoutMotif() {
-
+	void givenClientHasForeignKeySpaceValueButNoMotifThenHibernateDoesOnlyOneQuery() {
 		var client = new ClientGeneral();
 		client.setCode(1L);
 		client.setCodeSociete("SOCIETE");
 		client.setCodeCategorie("CATEGORIE");
-		client.setCodeMotifCreationClient(" ");
-
+		client.setCodeMotifCreationClient(" "); // foreign key value does not point to an actual entity
 
 		var motifCreationClient = new MotifCreationClient();
 		motifCreationClient.setCode("CODE");
 		motifCreationClient.setCodeSociete("SOCIETE");
 		motifCreationClient.setLibc("LIBC");
 		motifCreationClient.setMotifClient(true);
-		//client.setMotifCreationClient(motifCreationClient);
 		motifCreationClientRepository.save(motifCreationClient);
 
 		clientGeneralRepository.save(client);
@@ -46,52 +43,62 @@ class DemoApplicationTests {
 					Assertions.assertEquals(1, queryCountInterceptor.getCount());
 
 				}, Assertions::fail);
-
-		/*clientGeneralRepository.findByCodeSocieteAndCode("SOCIETE", 1L)
-				.ifPresentOrElse((entity) -> {
-					System.out.println("Found");
-					System.out.println(entity.getMotifCreationClient());
-
-				}, () -> System.out.println("Not found"));
-*/
-
 	}
 
-	@Test
-	void testSaveClientWithMotif() {
 
+	@Test
+	void givenClientHasNoMotifThenHibernateDoesOnlyOneQuery() {
 		var client = new ClientGeneral();
 		client.setCode(1L);
 		client.setCodeSociete("SOCIETE");
 		client.setCodeCategorie("CATEGORIE");
-		client.setCodeMotifCreationClient("CODE");
-
+		client.setCodeMotifCreationClient(null); // no foreign key value
 
 		var motifCreationClient = new MotifCreationClient();
 		motifCreationClient.setCode("CODE");
 		motifCreationClient.setCodeSociete("SOCIETE");
 		motifCreationClient.setLibc("LIBC");
 		motifCreationClient.setMotifClient(true);
-		//client.setMotifCreationClient(motifCreationClient);
 		motifCreationClientRepository.save(motifCreationClient);
 
 		clientGeneralRepository.save(client);
+		queryCountInterceptor.reset();
+		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 1L))
+				.ifPresentOrElse((entity) -> {
+					System.out.println("Found");
+					System.out.println(entity.getMotifCreationClient());
+					Assertions.assertNull(entity.getMotifCreationClient());
+					Assertions.assertEquals(1, queryCountInterceptor.getCount());
+
+				}, Assertions::fail);
+	}
+
+
+	@Test
+	void givenClientHasMotifThenHibernateDoesOnlyOneQuery() {
+
+		var client = new ClientGeneral();
+		client.setCode(1L);
+		client.setCodeSociete("SOCIETE");
+		client.setCodeCategorie("CATEGORIE");
+		client.setCodeMotifCreationClient("CODE"); // foreign key value points to an actual entity
+
+		var motifCreationClient = new MotifCreationClient();
+		motifCreationClient.setCode("CODE");
+		motifCreationClient.setCodeSociete("SOCIETE");
+		motifCreationClient.setLibc("LIBC");
+		motifCreationClient.setMotifClient(true);
+		motifCreationClientRepository.save(motifCreationClient);
+
+		clientGeneralRepository.save(client);
+		queryCountInterceptor.reset();
 		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 1L))
 				.ifPresentOrElse((entity) -> {
 					System.out.println("Found");
 					System.out.println(entity.getMotifCreationClient());
 					Assertions.assertNotNull(entity.getMotifCreationClient());
-
+					Assertions.assertEquals(1, queryCountInterceptor.getCount());
 				}, Assertions::fail);
-
-		/*clientGeneralRepository.findByCodeSocieteAndCode("SOCIETE", 1L)
-				.ifPresentOrElse((entity) -> {
-					System.out.println("Found");
-					System.out.println(entity.getMotifCreationClient());
-
-				}, () -> System.out.println("Not found"));
-*/
-
 	}
 
 }
