@@ -15,6 +15,9 @@ class DemoApplicationTests {
 	@Autowired
 	MotifCreationClientRepository motifCreationClientRepository;
 
+	@Autowired
+	QueryCountInterceptor queryCountInterceptor;
+
 	@Test
 	void testSaveClientWithoutMotif() {
 
@@ -34,11 +37,13 @@ class DemoApplicationTests {
 		motifCreationClientRepository.save(motifCreationClient);
 
 		clientGeneralRepository.save(client);
+		queryCountInterceptor.reset();
 		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 1L))
 				.ifPresentOrElse((entity) -> {
 					System.out.println("Found");
 					System.out.println(entity.getMotifCreationClient());
 					Assertions.assertNull(entity.getMotifCreationClient());
+					Assertions.assertEquals(1, queryCountInterceptor.getCount());
 
 				}, Assertions::fail);
 
