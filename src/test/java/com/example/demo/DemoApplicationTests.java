@@ -21,7 +21,7 @@ class DemoApplicationTests {
 		client.setCode(1L);
 		client.setCodeSociete("SOCIETE");
 		client.setCodeCategorie("CATEGORIE");
-		client.setCodeMotifCreationClient("CODE");
+		client.setCodeMotifCreationClient(" ");
 
 
 		var motifCreationClient = new MotifCreationClient();
@@ -29,24 +29,24 @@ class DemoApplicationTests {
 		motifCreationClient.setCodeSociete("SOCIETE");
 		motifCreationClient.setLibc("LIBC");
 		motifCreationClient.setMotifClient(true);
-		// client.setMotifCreationClient(motifCreationClient);
+		//client.setMotifCreationClient(motifCreationClient);
 		motifCreationClientRepository.save(motifCreationClient);
 
 		clientGeneralRepository.save(client);
-		/* clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 1L))
+		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 1L))
+				.ifPresentOrElse((entity) -> {
+					System.out.println("Found");
+					System.out.println(entity.getMotifCreationClient());
+
+				}, () -> System.out.println("Not found"));
+
+		/*clientGeneralRepository.findByCodeSocieteAndCode("SOCIETE", 1L)
 				.ifPresentOrElse((entity) -> {
 					System.out.println("Found");
 					System.out.println(entity.getMotifCreationClient());
 
 				}, () -> System.out.println("Not found"));
 */
-		clientGeneralRepository.findByCodeSocieteAndCode("SOCIETE", 1L)
-				.ifPresentOrElse((entity) -> {
-					System.out.println("Found");
-					System.out.println(entity.getMotifCreationClient());
-
-				}, () -> System.out.println("Not found"));
-
 
 	}
 
