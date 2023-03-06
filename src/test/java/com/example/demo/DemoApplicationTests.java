@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,13 +33,51 @@ class DemoApplicationTests {
 		//client.setMotifCreationClient(motifCreationClient);
 		motifCreationClientRepository.save(motifCreationClient);
 
-		clientGeneralRepository.save(client);
-		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 1L))
+		//clientGeneralRepository.save(client);
+		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 2L))
+				.ifPresentOrElse((entity) -> {
+					System.out.println("Found");
+					System.out.println(entity.getMotifCreationClient());
+					Assertions.assertNull(entity.getMotifCreationClient());
+
+				}, Assertions::fail);
+
+		/*clientGeneralRepository.findByCodeSocieteAndCode("SOCIETE", 1L)
 				.ifPresentOrElse((entity) -> {
 					System.out.println("Found");
 					System.out.println(entity.getMotifCreationClient());
 
 				}, () -> System.out.println("Not found"));
+*/
+
+	}
+
+	@Test
+	void testSaveClientWithMotif() {
+
+		var client = new ClientGeneral();
+		client.setCode(1L);
+		client.setCodeSociete("SOCIETE");
+		client.setCodeCategorie("CATEGORIE");
+		//client.setCodeMotifCreationClient("CODE");
+
+
+		var motifCreationClient = new MotifCreationClient();
+		motifCreationClient.setCode("CODE");
+		motifCreationClient.setCodeSociete("SOCIETE");
+		motifCreationClient.setLibc("LIBC");
+		motifCreationClient.setMotifClient(true);
+		client.setMotifCreationClient(motifCreationClient);
+		motifCreationClientRepository.save(motifCreationClient);
+
+		clientGeneralRepository.save(client);
+		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 1L))
+				.ifPresentOrElse((entity) -> {
+					System.out.println("Found");
+					System.out.println(entity.getMotifCreationClient());
+					Assertions.assertNotNull(entity.getMotifCreationClient());
+
+				}, Assertions::fail);
 
 		/*clientGeneralRepository.findByCodeSocieteAndCode("SOCIETE", 1L)
 				.ifPresentOrElse((entity) -> {
