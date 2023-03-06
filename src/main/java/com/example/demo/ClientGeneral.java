@@ -24,11 +24,12 @@ public class ClientGeneral {
     private Long code;
     @Column(name = "CAT_CODE")
     private String codeCategorie;
-    @Column(name = "MTC_CODE")
-    private String codeMotifCreationClient;
+    //@Column(name = "MTC_CODE")
+    //private String codeMotifCreationClient;
 
     @NotFound(action = NotFoundAction.IGNORE)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({@JoinColumn(name = "SOC_CODE", referencedColumnName = "SOC_CODE", insertable = false, updatable = false), @JoinColumn(name = "MTC_CODE", referencedColumnName = "MTC_CODE", insertable = false, updatable = false)})
+    @MapsId("codeSociete")
     private MotifCreationClient motifCreationClient;
 }

@@ -15,13 +15,14 @@ class DemoApplicationTests {
 	MotifCreationClientRepository motifCreationClientRepository;
 
 	@Test
-	void testSaveClient() {
+	void testSaveClientWithoutMotif() {
 
-		var client = new ClientGeneral();
+		/*var client = new ClientGeneral();
 		client.setCode(1L);
 		client.setCodeSociete("SOCIETE");
-		client.setCodeCategorie("CATEGORIE");
-		client.setCodeMotifCreationClient(" ");
+		client.setCodeCategorie("CATEGORIE");*/
+		//client.setCodeMotifCreationClient(null);
+		clientGeneralRepository.createClientGeneralWithSpaceForeignKey();
 
 
 		var motifCreationClient = new MotifCreationClient();
@@ -30,6 +31,42 @@ class DemoApplicationTests {
 		motifCreationClient.setLibc("LIBC");
 		motifCreationClient.setMotifClient(true);
 		//client.setMotifCreationClient(motifCreationClient);
+		motifCreationClientRepository.save(motifCreationClient);
+
+		//clientGeneralRepository.save(client);
+		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 2L))
+				.ifPresentOrElse((entity) -> {
+					System.out.println("Found");
+					System.out.println(entity.getMotifCreationClient());
+
+				}, () -> System.out.println("Not found"));
+
+		/*clientGeneralRepository.findByCodeSocieteAndCode("SOCIETE", 1L)
+				.ifPresentOrElse((entity) -> {
+					System.out.println("Found");
+					System.out.println(entity.getMotifCreationClient());
+
+				}, () -> System.out.println("Not found"));
+*/
+
+	}
+
+	@Test
+	void testSaveClientWithMotif() {
+
+		var client = new ClientGeneral();
+		client.setCode(1L);
+		client.setCodeSociete("SOCIETE");
+		client.setCodeCategorie("CATEGORIE");
+		//client.setCodeMotifCreationClient("CODE");
+
+
+		var motifCreationClient = new MotifCreationClient();
+		motifCreationClient.setCode("CODE");
+		motifCreationClient.setCodeSociete("SOCIETE");
+		motifCreationClient.setLibc("LIBC");
+		motifCreationClient.setMotifClient(true);
+		client.setMotifCreationClient(motifCreationClient);
 		motifCreationClientRepository.save(motifCreationClient);
 
 		clientGeneralRepository.save(client);
