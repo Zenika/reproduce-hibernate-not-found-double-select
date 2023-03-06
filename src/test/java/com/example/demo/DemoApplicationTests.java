@@ -16,7 +16,7 @@ class DemoApplicationTests {
 	MotifCreationClientRepository motifCreationClientRepository;
 
 	@Test
-	void testSaveClient() {
+	void testSaveClientWithoutMotif() {
 
 		var client = new ClientGeneral();
 		client.setCode(1L);
@@ -33,8 +33,8 @@ class DemoApplicationTests {
 		//client.setMotifCreationClient(motifCreationClient);
 		motifCreationClientRepository.save(motifCreationClient);
 
-		//clientGeneralRepository.save(client);
-		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 2L))
+		clientGeneralRepository.save(client);
+		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 1L))
 				.ifPresentOrElse((entity) -> {
 					System.out.println("Found");
 					System.out.println(entity.getMotifCreationClient());
@@ -59,7 +59,7 @@ class DemoApplicationTests {
 		client.setCode(1L);
 		client.setCodeSociete("SOCIETE");
 		client.setCodeCategorie("CATEGORIE");
-		//client.setCodeMotifCreationClient("CODE");
+		client.setCodeMotifCreationClient("CODE");
 
 
 		var motifCreationClient = new MotifCreationClient();
@@ -67,7 +67,7 @@ class DemoApplicationTests {
 		motifCreationClient.setCodeSociete("SOCIETE");
 		motifCreationClient.setLibc("LIBC");
 		motifCreationClient.setMotifClient(true);
-		client.setMotifCreationClient(motifCreationClient);
+		//client.setMotifCreationClient(motifCreationClient);
 		motifCreationClientRepository.save(motifCreationClient);
 
 		clientGeneralRepository.save(client);
