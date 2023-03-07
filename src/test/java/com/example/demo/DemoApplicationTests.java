@@ -19,12 +19,8 @@ class DemoApplicationTests {
 	QueryCountInterceptor queryCountInterceptor;
 
 	@Test
-	void givenClientHasForeignKeySpaceValueButNoMotifThenHibernateDoesOnlyOneQuery() {
-		var client = new ClientGeneral();
-		client.setCode(1L);
-		client.setCodeSociete("SOCIETE");
-		client.setCodeCategorie("CATEGORIE");
-		client.setCodeMotifCreationClient(" "); // foreign key value does not point to an actual entity
+	void givenInDatabseClientHasForeignKeySpaceValueButNoMotifThenHibernateDoesOnlyOneQuery() {
+		clientGeneralRepository.createClientGeneralWithSpaceForeignKey();
 
 		var motifCreationClient = new MotifCreationClient();
 		motifCreationClient.setCode("CODE");
@@ -33,7 +29,34 @@ class DemoApplicationTests {
 		motifCreationClient.setMotifClient(true);
 		motifCreationClientRepository.save(motifCreationClient);
 
+		queryCountInterceptor.reset();
+		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 1L))
+				.ifPresentOrElse((entity) -> {
+					System.out.println("Found");
+					System.out.println(entity.getMotifCreationClient());
+					Assertions.assertNull(entity.getMotifCreationClient());
+					Assertions.assertEquals(1, queryCountInterceptor.getCount());
+
+				}, Assertions::fail);
+	}
+
+	@Test
+	void givenClientHasForeignKeySpaceValueButNoMotifThenHibernateDoesOnlyOneQuery() {
+		var client = new ClientGeneral();
+		client.setCode(1L);
+		client.setCodeSociete("SOCIETE");
+		client.setCodeCategorie("CATEGORIE");
+		client.setCodeMotifCreationClient(" "); // foreign key value does not point to an actual entity
 		clientGeneralRepository.save(client);
+
+		var motifCreationClient = new MotifCreationClient();
+		motifCreationClient.setCode("CODE");
+		motifCreationClient.setCodeSociete("SOCIETE");
+		motifCreationClient.setLibc("LIBC");
+		motifCreationClient.setMotifClient(true);
+		motifCreationClientRepository.save(motifCreationClient);
+
+
 		queryCountInterceptor.reset();
 		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 1L))
 				.ifPresentOrElse((entity) -> {
