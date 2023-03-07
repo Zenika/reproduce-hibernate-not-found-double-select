@@ -25,6 +25,7 @@ public class ClientGeneral {
     @Column(name = "CAT_CODE")
     private String codeCategorie;
     @Column(name = "MTC_CODE")
+    @Convert(converter = SpaceToNullConverter.class)
     private String codeMotifCreationClient;
 
     @NotFound(action = NotFoundAction.IGNORE)
