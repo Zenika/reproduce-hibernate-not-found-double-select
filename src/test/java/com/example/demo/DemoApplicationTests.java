@@ -22,15 +22,8 @@ class DemoApplicationTests {
 	void givenInDatabseClientHasForeignKeySpaceValueButNoMotifThenHibernateDoesOnlyOneQuery() {
 		clientGeneralRepository.createClientGeneralWithSpaceForeignKey();
 
-		var motifCreationClient = new MotifCreationClient();
-		motifCreationClient.setCode("CODE");
-		motifCreationClient.setCodeSociete("SOCIETE");
-		motifCreationClient.setLibc("LIBC");
-		motifCreationClient.setMotifClient(true);
-		motifCreationClientRepository.save(motifCreationClient);
-
 		queryCountInterceptor.reset();
-		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 1L))
+		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 2L))
 				.ifPresentOrElse((entity) -> {
 					System.out.println("Found");
 					System.out.println(entity.getMotifCreationClient());
@@ -48,14 +41,6 @@ class DemoApplicationTests {
 		client.setCodeCategorie("CATEGORIE");
 		client.setCodeMotifCreationClient(" "); // foreign key value does not point to an actual entity
 		clientGeneralRepository.save(client);
-
-		var motifCreationClient = new MotifCreationClient();
-		motifCreationClient.setCode("CODE");
-		motifCreationClient.setCodeSociete("SOCIETE");
-		motifCreationClient.setLibc("LIBC");
-		motifCreationClient.setMotifClient(true);
-		motifCreationClientRepository.save(motifCreationClient);
-
 
 		queryCountInterceptor.reset();
 		clientGeneralRepository.findById(new ClientGeneralId("SOCIETE", 1L))
