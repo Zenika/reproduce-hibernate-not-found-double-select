@@ -31,4 +31,20 @@ public class ClientGeneral {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({@JoinColumn(name = "SOC_CODE", referencedColumnName = "SOC_CODE", insertable = false, updatable = false), @JoinColumn(name = "MTC_CODE", referencedColumnName = "MTC_CODE", insertable = false, updatable = false)})
     private MotifCreationClient motifCreationClient;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
+    @JoinColumns({
+            @JoinColumn(
+                    name = "SOC_CODE",
+                    referencedColumnName = "SOC_CODE",
+                    insertable = false,
+                    updatable = false),
+            @JoinColumn(
+                    name = "CAT_CODE",
+                    referencedColumnName = "CAT_CODE",
+                    insertable = false,
+                    updatable = false)
+    })
+    private Categorie categorie;
 }
