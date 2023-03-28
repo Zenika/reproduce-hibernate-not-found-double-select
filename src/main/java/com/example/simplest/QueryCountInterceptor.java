@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.simplest;
 
 import org.hibernate.EmptyInterceptor;
 import org.springframework.stereotype.Component;
