@@ -23,6 +23,7 @@ public class Categorie {
     private String code;
 
     @Column(name = "PAI_CODE")
+    @Convert(converter = SpaceToNullConverter.class)
     private String codeModePaiement;
 
     @Column(name = "ACT_CODE1")

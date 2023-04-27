@@ -18,13 +18,16 @@ public class ClientGeneral {
 
     @Id
     @Column(name = "SOC_CODE")
+    @Convert(converter = SpaceToNullConverter.class)
     private String codeSociete;
     @Id
     @Column(name = "CLG_CODE")
     private Long code;
     @Column(name = "CAT_CODE")
+    @Convert(converter = SpaceToNullConverter.class)
     private String codeCategorie;
     @Column(name = "MTC_CODE")
+    @Convert(converter = SpaceToNullConverter.class)
     private String codeMotifCreationClient;
 
     @NotFound(action = NotFoundAction.IGNORE)
